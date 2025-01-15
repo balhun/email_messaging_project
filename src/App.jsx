@@ -13,6 +13,7 @@ import About from './pages/About.jsx'
 import Login from './pages/Login.jsx'
 import NotFound from './pages/NotFound.jsx'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import Admin from './pages/Admin.jsx';
 
 
 export const app = initializeApp(firebaseConfig);
@@ -21,10 +22,15 @@ export const auth = getAuth(app);
 
 export default function App() {
 
-  const [ user, setUser ] = useState(null)
+  const [ user, setUser ] = useState(null);
+  const [ admin, setAdmin ] = useState(false);
   
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => setUser(currentUser));
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      if (currentUser && currentUser.email == "bela@gmail.com") setAdmin(true);
+      else setAdmin(false);
+    });
     return () => unsubscribe;
   }, [])
 
@@ -33,10 +39,11 @@ export default function App() {
   }
 
   const router = createBrowserRouter([
-    { path: "/", element: <Layout user={user} logout={logout} />, children: [
+    { path: "/", element: <Layout user={user} logout={logout} admin={admin} />, children: [
       { path: "/", element: <Messages user={user} db={db} /> },
       { path: "/users", element: <Users db={db} /> },
       { path: "/about", element: <About /> },
+      { path: "/admin", element: <Admin admin={admin} /> },
       { path: "/login", element: <Login auth={auth} /> },
       { path: "*", element: <NotFound /> }
     ]}

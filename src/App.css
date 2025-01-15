@@ -12,6 +12,10 @@
   text-transform: none;
 }
 
+.menu .admin {
+  margin-left: 10px;
+}
+
 .page {
   background-color: white;
   border: 1px solid lightgrey;
